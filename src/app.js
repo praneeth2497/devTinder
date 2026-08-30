@@ -1,9 +1,18 @@
 const express=require("express");
 const app= express();
 
-app.get("/user/:userId/:name/:password", (req, res) => {
-    console.log(req.params);
-  res.send({ firstName: "praneeth", lastName: "chandra" });
+app.get("/user", (req, res, next) => {
+    console.log("Handling the route user");
+  //res.send("1st response");
+  next();
+},(req, res, next)=>{
+     res.send("2nd response");
+},(req, res)=>{
+     res.send("3rd response");
+},(req, res)=>{
+     res.send("4th response");
+},(req, res)=>{
+     res.send("5th response");
 });
 
 
