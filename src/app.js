@@ -64,13 +64,16 @@ const data =req.body;
 
 try{
     const ALLOWED_UPDATES = [
-    "userId","photoUrl","about","gender","age","skills"
+    "photoUrl","about","gender","age","skills"
 ];
 const isUpdateAllowed = Object.keys(data).every((k)=>
 ALLOWED_UPDATES.includes(k)
 );
 if(!isUpdateAllowed){
     throw new Error("update not allowed");
+}
+if(data?.skills.length>10){
+    throw new Error("skills cannot be more than 10");
 }
 await User.findByIdAndUpdate({_id: userId},data,{runValidators: true});
 res.send("user updated successfully");
