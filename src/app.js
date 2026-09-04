@@ -58,14 +58,24 @@ res.send("user deleted successfully");
 });
 
 //Update the user
-app.patch("/user", async (req, res)=>{
-const userId = req.body.userId;
+app.patch("/user/:userId", async (req, res)=>{
+const userId = req.params?.userId;
 const data =req.body;
+
 try{
-await User.findByIdAndUpdate({_id: userId},data);
+    const ALLOWED_UPDATES = [
+    "userId","photoUrl","about","gender","age","skills"
+];
+const isUpdateAllowed = Object.keys(data).every((k)=>
+ALLOWED_UPDATES.includes(k)
+);
+if(!isUpdateAllowed){
+    throw new Error("update not allowed");
+}
+await User.findByIdAndUpdate({_id: userId},data,{runValidators: true});
 res.send("user updated successfully");
 }catch(err){
- res.status(400).send("something went wrong")
+ res.status(400).send("update failed:"+ err.message)
 }
 });
 
